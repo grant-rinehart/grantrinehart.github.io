@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width,initial-scale=1"/>
+<title>Grant Rinehart — Financial Analysis</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.js"></script>
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#1a1a1a;background:#fff}
+.hdr{padding:2rem 2rem 1.25rem;border-bottom:1px solid #e5e5e5;margin-bottom:1rem}
+.hbadge{display:inline-block;font-size:11px;padding:3px 10px;border-radius:20px;background:#E6F1FB;color:#185FA5;margin-bottom:.5rem}
+.hdr h1{font-size:24px;font-weight:600;margin-bottom:.25rem}
+.hdr .sub{font-size:13px;color:#666;line-height:1.5;margin-bottom:.4rem}
+.byline{font-size:13px;color:#666}.byline strong{color:#1a1a1a;font-weight:600}
+.disc{margin:0 2rem 1rem;padding:9px 14px;background:#FAEEDA;border:1px solid #FAC775;border-radius:8px;font-size:12px;color:#633806;line-height:1.6}
+.disc strong{font-weight:600}
+nav{display:flex;gap:6px;flex-wrap:wrap;padding:.75rem 2rem;border-bottom:1px solid #e5e5e5;margin-bottom:1.5rem}
+nav button{font-size:12px;padding:5px 12px;border-radius:8px;border:1px solid #ddd;background:transparent;color:#555;cursor:pointer;transition:all .15s}
+nav button:hover,nav button.active{background:#f5f5f5;color:#1a1a1a}
+nav button.ng.active{background:#E6F1FB;color:#0C447C;border-color:#378ADD}
+nav button.nt.active{background:#FAEEDA;color:#854F0B;border-color:#EF9F27}
+nav button.nv.active{background:#EAF3DE;color:#27500A;border-color:#639922}
+.sec{display:none;padding:0 2rem 2rem}.sec.on{display:block}
+h2{font-size:18px;font-weight:600;margin-bottom:.3rem}
+.dsub{font-size:13px;color:#666;margin-bottom:1.25rem;line-height:1.5}
+.cbadge{display:inline-block;font-size:12px;padding:3px 12px;border-radius:20px;margin-bottom:.9rem;font-weight:600}
+.gb{background:#E6F1FB;color:#0C447C}.tb{background:#FAEEDA;color:#854F0B}.nb{background:#EAF3DE;color:#27500A}
+.ig{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:8px;margin-bottom:1.5rem}
+.ic{border-radius:10px;padding:1rem;cursor:pointer;border:1px solid transparent;transition:border-color .15s}
+.gcard{background:#E6F1FB;border-color:#B5D4F4}.gcard:hover{border-color:#378ADD}
+.tcard{background:#FAEEDA;border-color:#FAC775}.tcard:hover{border-color:#EF9F27}
+.ncard{background:#EAF3DE;border-color:#C0DD97}.ncard:hover{border-color:#639922}
+.ic .tk{font-size:10px;margin-bottom:.2rem}
+.ic .icn{font-size:15px;font-weight:600;margin-bottom:.2rem}
+.ic .icg{font-size:22px;font-weight:700}
+.ic .icd{font-size:11px;margin-top:3px}
+.mg{display:grid;grid-template-columns:repeat(auto-fit,minmax(120px,1fr));gap:8px;margin-bottom:1.5rem}
+.mc{background:#f7f7f7;border-radius:8px;padding:12px 14px;border-left:3px solid transparent}
+.mc.g{border-left-color:#378ADD}.mc.t{border-left-color:#EF9F27}.mc.n{border-left-color:#639922}
+.mc .lbl{font-size:10px;color:#999;text-transform:uppercase;letter-spacing:.04em;margin-bottom:3px}
+.mc .val{font-size:16px;font-weight:600;line-height:1.2}
+.mc .sv{font-size:11px;color:#777;margin-top:2px}
+.rbadge{display:inline-block;font-size:10px;padding:1px 6px;border-radius:4px;background:#eee;color:#999;margin-top:3px}
+.cw{position:relative;width:100%;margin-bottom:1.5rem}
+.lr{display:flex;flex-wrap:wrap;gap:14px;margin-bottom:7px;font-size:11px;color:#777}
+.ld{width:9px;height:9px;border-radius:2px;display:inline-block;margin-right:3px;vertical-align:middle}
+.ab{background:#f7f7f7;border-radius:10px;padding:1rem 1.25rem;margin-bottom:1rem}
+.ab h3{font-size:14px;font-weight:600;margin-bottom:.6rem}
+.si,.ri{font-size:12px;color:#555;padding:3px 0;display:flex;align-items:flex-start;gap:7px;line-height:1.5}
+.dg{width:6px;height:6px;border-radius:50%;background:#639922;margin-top:4px;flex-shrink:0}
+.dr{width:6px;height:6px;border-radius:50%;background:#E24B4A;margin-top:4px;flex-shrink:0}
+.ctbl{width:100%;border-collapse:collapse;font-size:12px;margin-bottom:1.5rem}
+.ctbl th{text-align:left;padding:7px 10px;font-size:11px;font-weight:600;color:#777;border-bottom:1px solid #e5e5e5}
+.ctbl td{padding:8px 10px;border-bottom:1px solid #e5e5e5}
+.ctbl tr:last-child td{border-bottom:none}
+.gcol{color:#185FA5;font-weight:600}.tcol{color:#BA7517;font-weight:600}.ncol{color:#3B6D11;font-weight:600}
+.wb{font-size:11px;padding:2px 8px;border-radius:10px;background:#EAF3DE;color:#3B6D11}
+.gc2{display:flex;align-items:center;gap:.9rem;border-radius:10px;padding:.9rem 1.1rem;margin-bottom:.6rem;border:1px solid transparent}
+.gc2.nv{background:#EAF3DE;border-color:#C0DD97}.gc2.go{background:#E6F1FB;border-color:#B5D4F4}.gc2.te{background:#FAEEDA;border-color:#FAC775}
+.gcirc{width:44px;height:44px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:17px;font-weight:700;flex-shrink:0}
+.cn2{background:#C0DD97;color:#173404}.cg2{background:#B5D4F4;color:#042C53}.ct2{background:#FAC775;color:#633806}
+.footer{margin:1.5rem 2rem 0;padding:1rem 0;border-top:1px solid #e5e5e5;font-size:11px;color:#aaa;line-height:1.8}
+.footer strong{color:#777;font-weight:600}
+.reports-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(230px,1fr));gap:12px;margin-bottom:1.5rem}
+.rcard{background:#fff;border:1px solid #e5e5e5;border-radius:10px;padding:1rem 1.1rem;display:flex;flex-direction:column;gap:5px}
+.rcard:hover{border-color:#ccc}
+.rtitle{font-size:14px;font-weight:600}
+.rdesc{font-size:12px;color:#666;line-height:1.5;flex:1}
+.rmeta{font-size:11px;color:#aaa}
+.ract{display:flex;gap:8px;margin-top:4px;align-items:center}
+.rbtn{font-size:12px;padding:5px 12px;border-radius:7px;border:1px solid #ddd;background:transparent;color:#555;cursor:pointer}
+.rbtn:hover{background:#f5f5f5}
+.rbtn.op{color:#185FA5;border-color:#B5D4F4;background:#E6F1FB}.rbtn.op:hover{background:#B5D4F4}
+.rbtn.dl{color:#A32D2D;border-color:#F7C1C1}.rbtn.dl:hover{background:#FCEBEB}
+.add-trigger{display:flex;align-items:center;gap:8px;padding:10px 14px;border-radius:10px;border:1.5px dashed #ddd;background:transparent;color:#777;font-size:13px;cursor:pointer;width:100%;margin-bottom:1.25rem}
+.add-trigger:hover{background:#f5f5f5}
+.add-form{background:#f7f7f7;border-radius:10px;padding:1.25rem;margin-bottom:1.25rem;display:none}
+.add-form.open{display:block}
+.add-form h3{font-size:14px;font-weight:600;margin-bottom:.9rem}
+.add-form label{display:block;font-size:12px;color:#666;margin-bottom:4px}
+.add-form input,.add-form textarea{width:100%;padding:7px 11px;border-radius:8px;border:1px solid #ddd;background:#fff;color:#1a1a1a;font-size:13px;margin-bottom:.8rem;font-family:inherit}
+.add-form textarea{resize:vertical;min-height:65px}
+.frow{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.bp{padding:8px 18px;border-radius:8px;border:1px solid #ddd;background:#fff;color:#1a1a1a;font-size:13px;cursor:pointer}
+.bp:hover{background:#f5f5f5}
+.bc{padding:8px 14px;border-radius:8px;border:none;background:transparent;color:#aaa;font-size:13px;cursor:pointer}
+.tag{display:inline-block;font-size:10px;padding:2px 7px;border-radius:5px;background:#eee;color:#999}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div class="hbadge">Student Financial Analysis — April 2026</div>
+  <h1>Tech Giants: Google, Tesla & Nvidia</h1>
+  <p class="sub">A personal deep-dive into revenue, profit margins, and growth across FY2023–FY2025.</p>
+  <div class="byline">By <strong>Grant Rinehart</strong> · Student · Personal Research Project</div>
+</div>
+<div class="disc"><strong>Disclaimer:</strong> This analysis was created by Grant Rinehart, a high school student, for personal and educational purposes only. All data is sourced from publicly available information. FY2025 figures are reported as ranges. <strong>This is not financial advice.</strong> Do not make investment decisions based on this report. Always consult a licensed financial professional before investing.</div>
+<nav>
+  <button class="active" onclick="go('overview')">Overview</button>
+  <button class="ng" onclick="go('google')">Google (GOOGL)</button>
+  <button class="nt" onclick="go('tesla')">Tesla (TSLA)</button>
+  <button class="nv" onclick="go('nvidia')">Nvidia (NVDA)</button>
+  <button onclick="go('comp')">Comparison</button>
+  <button onclick="go('reports')">All Reports</button>
+</nav>
+
+<div id="s-overview" class="sec on">
+  <h2>Company snapshot</h2>
+  <p class="dsub">Click any card to jump to that company's full analysis.</p>
+  <div class="ig">
+    <div class="ic gcard" onclick="go('google')"><div class="tk" style="color:#185FA5">GOOGL · Alphabet</div><div class="icn" style="color:#0C447C">Google</div><div class="icg" style="color:#185FA5">A</div><div class="icd" style="color:#185FA5">Stable &amp; highly profitable</div></div>
+    <div class="ic tcard" onclick="go('tesla')"><div class="tk" style="color:#BA7517">TSLA · Tesla Inc.</div><div class="icn" style="color:#854F0B">Tesla</div><div class="icg" style="color:#BA7517">B-</div><div class="icd" style="color:#BA7517">Margin pressure &amp; slowdown</div></div>
+    <div class="ic ncard" onclick="go('nvidia')"><div class="tk" style="color:#3B6D11">NVDA · Nvidia Corp.</div><div class="icn" style="color:#27500A">Nvidia</div><div class="icg" style="color:#3B6D11">A+</div><div class="icd" style="color:#3B6D11">Explosive AI-driven growth</div></div>
+  </div>
+  <h2 style="margin-bottom:.3rem">FY2025 at a glance</h2>
+  <p class="dsub">Key metrics for the most recently completed fiscal year. FY2025 figures shown as ranges.</p>
+  <div class="mg">
+    <div class="mc g"><div class="lbl">Google revenue</div><div class="val">$390–405B</div><div class="sv">+10–15% YoY</div></div>
+    <div class="mc t"><div class="lbl">Tesla revenue</div><div class="val">$95–105B</div><div class="sv">-3% to +5% YoY</div></div>
+    <div class="mc n"><div class="lbl">Nvidia revenue</div><div class="val">$90–120B</div><div class="sv">+50%+ YoY</div></div>
+    <div class="mc g"><div class="lbl">Google net profit</div><div class="val">$100–110B</div><div class="sv">25–28% margin</div></div>
+    <div class="mc t"><div class="lbl">Tesla net profit</div><div class="val">$5–10B</div><div class="sv">5–10% margin</div></div>
+    <div class="mc n"><div class="lbl">Nvidia net profit</div><div class="val">$40–60B</div><div class="sv">55–65% margin</div></div>
+  </div>
+  <div class="lr"><span><span class="ld" style="background:#378ADD"></span>Google</span><span><span class="ld" style="background:#EF9F27"></span>Tesla</span><span><span class="ld" style="background:#639922"></span>Nvidia</span></div>
+  <div class="cw" style="height:260px"><canvas id="c0"></canvas></div>
+</div>
+
+<div id="s-google" class="sec">
+  <div class="cbadge gb">GOOGL — Alphabet Inc.</div>
+  <h2 style="color:#0C447C">Google</h2>
+  <p class="dsub">Powered by search ads, YouTube, Gmail and Google Cloud.</p>
+  <div class="mg">
+    <div class="mc g"><div class="lbl">FY2023 revenue</div><div class="val">$307B</div><div class="sv">+9%</div></div>
+    <div class="mc g"><div class="lbl">FY2024 revenue</div><div class="val">$350B</div><div class="sv">+14%</div></div>
+    <div class="mc g"><div class="lbl">FY2025 revenue</div><div class="val">$390–405B</div><div class="sv">+10–15%</div><div class="rbadge">range</div></div>
+    <div class="mc g"><div class="lbl">FY2025 margin</div><div class="val">25–28%</div><div class="sv">vs. 27% in '24</div><div class="rbadge">range</div></div>
+    <div class="mc g"><div class="lbl">FY2025 EPS</div><div class="val">$7.50–8.00</div><div class="sv">vs. $6.80 in '24</div><div class="rbadge">range</div></div>
+    <div class="mc g"><div class="lbl">FY2025 net profit</div><div class="val">$100–110B</div><div class="sv">vs. $95B in '24</div><div class="rbadge">range</div></div>
+  </div>
+  <div class="lr"><span><span class="ld" style="background:#378ADD"></span>Revenue</span><span><span class="ld" style="background:#85B7EB"></span>Net profit</span></div>
+  <div class="cw" style="height:240px"><canvas id="c1"></canvas></div>
+  <div class="ab" style="border-left:3px solid #378ADD"><h3>Key strengths</h3><div class="si"><span class="dg"></span>Strong, consistent profit growth year after year</div><div class="si"><span class="dg"></span>AI tools like Gemini expanding product lineup</div><div class="si"><span class="dg"></span>Google Cloud growing fast against AWS and Azure</div></div>
+  <div class="ab" style="border-left:3px solid #378ADD"><h3>Key risks</h3><div class="ri"><span class="dr"></span>Competition from AI search tools (ChatGPT, Bing)</div><div class="ri"><span class="dr"></span>Government antitrust investigations ongoing</div><div class="ri"><span class="dr"></span>Ad revenue vulnerable in an economic downturn</div></div>
+</div>
+
+<div id="s-tesla" class="sec">
+  <div class="cbadge tb">TSLA — Tesla Inc.</div>
+  <h2 style="color:#854F0B">Tesla</h2>
+  <p class="dsub">The world's most famous EV brand. Revenue stalled as price cuts squeezed margins.</p>
+  <div class="mg">
+    <div class="mc t"><div class="lbl">FY2023 revenue</div><div class="val">$97B</div><div class="sv">+19%</div></div>
+    <div class="mc t"><div class="lbl">FY2024 revenue</div><div class="val">$98B</div><div class="sv">+1%</div></div>
+    <div class="mc t"><div class="lbl">FY2025 revenue</div><div class="val">$95–105B</div><div class="sv">-3% to +5%</div><div class="rbadge">range</div></div>
+    <div class="mc t"><div class="lbl">FY2025 margin</div><div class="val">5–10%</div><div class="sv">vs. 9% in '24</div><div class="rbadge">range</div></div>
+    <div class="mc t"><div class="lbl">FY2025 EPS</div><div class="val">$1.50–2.50</div><div class="sv">vs. $2.80 in '24</div><div class="rbadge">range</div></div>
+    <div class="mc t"><div class="lbl">FY2025 net profit</div><div class="val">$5–10B</div><div class="sv">vs. $10B in '24</div><div class="rbadge">range</div></div>
+  </div>
+  <div class="lr"><span><span class="ld" style="background:#EF9F27"></span>Revenue</span><span><span class="ld" style="background:#FAC775"></span>Net profit</span></div>
+  <div class="cw" style="height:240px"><canvas id="c2"></canvas></div>
+  <div class="ab" style="border-left:3px solid #EF9F27"><h3>Key strengths</h3><div class="si"><span class="dg"></span>Still the #1 electric car brand globally</div><div class="si"><span class="dg"></span>Energy storage (Powerwall/Megapack) growing fast</div><div class="si"><span class="dg"></span>Full Self-Driving software could be huge in the future</div></div>
+  <div class="ab" style="border-left:3px solid #EF9F27"><h3>Key risks</h3><div class="ri"><span class="dr"></span>Heavy competition from Chinese EVs like BYD</div><div class="ri"><span class="dr"></span>Profit margins shrinking from aggressive price cuts</div><div class="ri"><span class="dr"></span>Over-reliance on Elon Musk adds uncertainty</div></div>
+</div>
+
+<div id="s-nvidia" class="sec">
+  <div class="cbadge nb">NVDA — Nvidia Corporation</div>
+  <h2 style="color:#27500A">Nvidia</h2>
+  <p class="dsub">The dominant AI chip maker. Revenue more than doubled in one year.</p>
+  <div class="mg">
+    <div class="mc n"><div class="lbl">FY2023 revenue</div><div class="val">$27B</div><div class="sv">+20%</div></div>
+    <div class="mc n"><div class="lbl">FY2024 revenue</div><div class="val">$60B</div><div class="sv">+100%+</div></div>
+    <div class="mc n"><div class="lbl">FY2025 revenue</div><div class="val">$90–120B</div><div class="sv">+50%+</div><div class="rbadge">range</div></div>
+    <div class="mc n"><div class="lbl">FY2025 margin</div><div class="val">55–65%</div><div class="sv">vs. 55% in '24</div><div class="rbadge">range</div></div>
+    <div class="mc n"><div class="lbl">FY2025 EPS</div><div class="val">$5–6</div><div class="sv">vs. $3.20 in '24</div><div class="rbadge">range</div></div>
+    <div class="mc n"><div class="lbl">FY2025 net profit</div><div class="val">$40–60B</div><div class="sv">vs. $20B in '24</div><div class="rbadge">range</div></div>
+  </div>
+  <div class="lr"><span><span class="ld" style="background:#639922"></span>Revenue</span><span><span class="ld" style="background:#97C459"></span>Net profit</span></div>
+  <div class="cw" style="height:240px"><canvas id="c3"></canvas></div>
+  <div class="ab" style="border-left:3px solid #639922"><h3>Key strengths</h3><div class="si"><span class="dg"></span>Dominant AI chip maker — competitors years behind</div><div class="si"><span class="dg"></span>Revenue growth almost unprecedented in business history</div><div class="si"><span class="dg"></span>New Blackwell chip generation in massive demand</div></div>
+  <div class="ab" style="border-left:3px solid #639922"><h3>Key risks</h3><div class="ri"><span class="dr"></span>US restrictions on chip exports to China</div><div class="ri"><span class="dr"></span>AMD and Intel both trying to close the gap</div><div class="ri"><span class="dr"></span>AI spending boom could eventually slow down</div></div>
+</div>
+
+<div id="s-comp" class="sec">
+  <h2>Side-by-side comparison</h2>
+  <p class="dsub">FY2025 figures shown as ranges — most recently completed fiscal year as of April 2026.</p>
+  <table class="ctbl">
+    <thead><tr><th>Metric</th><th style="color:#185FA5">Google</th><th style="color:#BA7517">Tesla</th><th style="color:#3B6D11">Nvidia</th><th>Winner</th></tr></thead>
+    <tbody>
+      <tr><td>Revenue</td><td class="gcol">$390–405B</td><td class="tcol">$95–105B</td><td class="ncol">$90–120B</td><td><span class="wb" style="background:#E6F1FB;color:#185FA5">Google — biggest</span></td></tr>
+      <tr><td>Net profit</td><td class="gcol">$100–110B</td><td class="tcol">$5–10B</td><td class="ncol">$40–60B</td><td><span class="wb" style="background:#E6F1FB;color:#185FA5">Google — most profit</span></td></tr>
+      <tr><td>Profit margin</td><td class="gcol">25–28%</td><td class="tcol">5–10%</td><td class="ncol">55–65%</td><td><span class="wb">Nvidia — most efficient</span></td></tr>
+      <tr><td>EPS</td><td class="gcol">$7.50–8.00</td><td class="tcol">$1.50–2.50</td><td class="ncol">$5–6</td><td><span class="wb" style="background:#E6F1FB;color:#185FA5">Google — strongest EPS</span></td></tr>
+      <tr><td>Revenue growth</td><td class="gcol">+10–15%</td><td class="tcol">-3% to +5%</td><td class="ncol">+50%+</td><td><span class="wb">Nvidia — fastest growth</span></td></tr>
+    </tbody>
+  </table>
+  <div class="lr"><span><span class="ld" style="background:#378ADD"></span>Google</span><span><span class="ld" style="background:#EF9F27"></span>Tesla</span><span><span class="ld" style="background:#639922"></span>Nvidia</span></div>
+  <div class="cw" style="height:240px"><canvas id="c4"></canvas></div>
+  <h2 style="margin-bottom:.9rem">Final report card</h2>
+  <div class="gc2 nv"><div class="gcirc cn2">A+</div><div><div style="font-size:14px;font-weight:600;color:#27500A">Nvidia</div><div style="font-size:12px;color:#666;margin-top:2px">Explosive AI-driven growth, enormous margins, dominant chip market position.</div></div></div>
+  <div class="gc2 go"><div class="gcirc cg2">A</div><div><div style="font-size:14px;font-weight:600;color:#0C447C">Google</div><div style="font-size:12px;color:#666;margin-top:2px">Stable, highly profitable, consistent growth and strong AI investment.</div></div></div>
+  <div class="gc2 te"><div class="gcirc ct2">B-</div><div><div style="font-size:14px;font-weight:600;color:#854F0B">Tesla</div><div style="font-size:12px;color:#666;margin-top:2px">Slowing growth, declining margins, heavy competitive pressure.</div></div></div>
+</div>
+
+<div id="s-reports" class="sec">
+  <h2>All reports</h2>
+  <p class="dsub">Every report Grant has published.</p>
+  <div class="reports-grid" id="rGrid"></div>
+  <button class="add-trigger" onclick="toggleForm()"><span style="font-size:18px;line-height:1">+</span> Add a new report</button>
+  <div class="add-form" id="addForm">
+    <h3>New report</h3>
+    <label>Title</label><input type="text" id="rTitle" placeholder="e.g. Apple vs Microsoft"/>
+    <label>Short description</label><textarea id="rDesc" placeholder="1–2 sentences."></textarea>
+    <div class="frow">
+      <div><label>Date</label><input type="text" id="rDate" placeholder="e.g. May 2026"/></div>
+      <div><label>Topic tag</label><input type="text" id="rTag" placeholder="e.g. Tech"/></div>
+    </div>
+    <label>Google Docs link</label><input type="text" id="rLink" placeholder="https://docs.google.com/document/d/..."/>
+    <div style="display:flex;gap:8px;margin-top:.25rem">
+      <button class="bp" onclick="addReport()">Add report</button>
+      <button class="bc" onclick="toggleForm()">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<div class="footer">
+  <strong>Grant Rinehart</strong> · Student · Personal Research Project · April 2026<br>
+  Sources: SEC EDGAR · Google IR · Tesla IR · Nvidia IR · Macrotrends · Yahoo Finance · FY2025 figures shown as ranges · <strong>Not financial advice</strong>
+</div>
+
+<script>
+function go(id){
+  document.querySelectorAll('.sec').forEach(s=>s.classList.remove('on'));
+  document.querySelectorAll('nav button').forEach(b=>b.classList.remove('active'));
+  document.getElementById('s-'+id).classList.add('on');
+  const m={overview:0,google:1,tesla:2,nvidia:3,comp:4,reports:5};
+  document.querySelectorAll('nav button')[m[id]].classList.add('active');
+}
+const bo={responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false}},scales:{x:{grid:{color:'rgba(0,0,0,.05)'},ticks:{font:{size:10}}},y:{grid:{color:'rgba(0,0,0,.05)'},ticks:{font:{size:10},callback:v=>'$'+v+'B'}}}};
+new Chart(document.getElementById('c0'),{type:'bar',data:{labels:['Google','Tesla','Nvidia'],datasets:[{label:'Revenue',data:[397,100,105],backgroundColor:['#378ADD','#EF9F27','#639922'],borderRadius:3},{label:'Net Profit',data:[105,7.5,50],backgroundColor:['#85B7EB','#FAC775','#97C459'],borderRadius:3}]},options:{...bo,plugins:{legend:{display:true,labels:{font:{size:10},boxWidth:9,boxHeight:9}}}}});
+new Chart(document.getElementById('c1'),{type:'line',data:{labels:['FY2023','FY2024','FY2025'],datasets:[{label:'Revenue',data:[307,350,397],borderColor:'#378ADD',backgroundColor:'rgba(55,138,221,.09)',fill:true,tension:.3,pointRadius:3},{label:'Net Profit',data:[74,95,105],borderColor:'#85B7EB',backgroundColor:'rgba(133,183,235,.06)',fill:true,tension:.3,pointRadius:3,borderDash:[4,3]}]},options:{...bo,plugins:{legend:{display:true,labels:{font:{size:10},boxWidth:9,boxHeight:9}}}}});
+new Chart(document.getElementById('c2'),{type:'line',data:{labels:['FY2023','FY2024','FY2025'],datasets:[{label:'Revenue',data:[97,98,100],borderColor:'#EF9F27',backgroundColor:'rgba(239,159,39,.09)',fill:true,tension:.3,pointRadius:3},{label:'Net Profit',data:[15,10,7.5],borderColor:'#FAC775',backgroundColor:'rgba(250,199,117,.06)',fill:true,tension:.3,pointRadius:3,borderDash:[4,3]}]},options:{...bo,plugins:{legend:{display:true,labels:{font:{size:10},boxWidth:9,boxHeight:9}}}}});
+new Chart(document.getElementById('c3'),{type:'line',data:{labels:['FY2023','FY2024','FY2025'],datasets:[{label:'Revenue',data:[27,60,105],borderColor:'#639922',backgroundColor:'rgba(99,153,34,.09)',fill:true,tension:.3,pointRadius:3},{label:'Net Profit',data:[4.5,20,50],borderColor:'#97C459',backgroundColor:'rgba(151,196,89,.06)',fill:true,tension:.3,pointRadius:3,borderDash:[4,3]}]},options:{...bo,plugins:{legend:{display:true,labels:{font:{size:10},boxWidth:9,boxHeight:9}}}}});
+new Chart(document.getElementById('c4'),{type:'bar',data:{labels:['Google','Tesla','Nvidia'],datasets:[{label:'Profit margin %',data:[26.5,7.5,60],backgroundColor:['#378ADD','#EF9F27','#639922'],borderRadius:3},{label:'Revenue growth %',data:[12.5,1,50],backgroundColor:['#85B7EB','#FAC775','#97C459'],borderRadius:3}]},options:{...bo,scales:{...bo.scales,y:{...bo.scales.y,ticks:{font:{size:10},callback:v=>v+'%'}}},plugins:{legend:{display:true,labels:{font:{size:10},boxWidth:9,boxHeight:9}}}}});
+
+// ── GOOGLE DOC LINK IS HARDCODED HERE ──
+const MAIN_DOC_LINK = 'https://docs.google.com/document/d/1nHAyrPBo2hRp4ejURrafcrYSkjxf3gcccvSMf3R7Eto/edit?tab=t.0';
+
+let reports=[],nid=1;
+function renderReports(){
+  const g=document.getElementById('rGrid');
+  const main=`<div class="rcard" style="border-color:#ccc">
+    <div class="rtitle">Tech Giants: Google, Tesla & Nvidia</div>
+    <div class="rdesc">A deep-dive comparing revenue, profit margins, and growth trajectories across FY2023–FY2025.</div>
+    <div class="rmeta">April 2026 &nbsp;·&nbsp; <span class="tag">Tech</span></div>
+    <div class="ract"><button class="rbtn op" onclick="window.open('${MAIN_DOC_LINK}','_blank')">Open doc</button></div>
+  </div>`;
+  const extras=reports.map(r=>`<div class="rcard">
+    <div class="rtitle">${r.title}</div>
+    <div class="rdesc">${r.desc||'No description.'}</div>
+    <div class="rmeta">${r.date||''}${r.tag?' &nbsp;·&nbsp; <span class="tag">'+r.tag+'</span>':''}</div>
+    <div class="ract">${r.link?`<button class="rbtn op" onclick="window.open('${r.link}','_blank')">Open doc</button>`:'<span style="font-size:11px;color:#aaa">No doc linked</span>'}
+    <button class="rbtn dl" onclick="del(${r.id})" style="margin-left:auto">Remove</button></div>
+  </div>`).join('');
+  g.innerHTML=main+extras;
+}
+function toggleForm(){document.getElementById('addForm').classList.toggle('open');}
+function addReport(){
+  const t=document.getElementById('rTitle').value.trim();
+  if(!t){document.getElementById('rTitle').style.borderColor='#E24B4A';return;}
+  document.getElementById('rTitle').style.borderColor='';
+  reports.unshift({id:nid++,title:t,desc:document.getElementById('rDesc').value.trim(),date:document.getElementById('rDate').value.trim(),tag:document.getElementById('rTag').value.trim(),link:document.getElementById('rLink').value.trim()});
+  ['rTitle','rDesc','rDate','rTag','rLink'].forEach(i=>document.getElementById(i).value='');
+  document.getElementById('addForm').classList.remove('open');
+  renderReports();
+}
+function del(id){reports=reports.filter(r=>r.id!==id);renderReports();}
+renderReports();
+</script>
+</body>
+</html>
