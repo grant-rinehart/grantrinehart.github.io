@@ -280,7 +280,14 @@ function renderReports(){
   </div>`).join('');
   g.innerHTML=main+extras;
 }
-function toggleForm(){document.getElementById('addForm').classList.toggle('open');}
+function toggleForm(){
+  const pass = prompt('Enter password:');
+  if(pass === 'bears888'){
+    document.getElementById('addForm').classList.toggle('open');
+  } else {
+    alert('Incorrect password');
+  }
+}
 function addReport(){
   const t=document.getElementById('rTitle').value.trim();
   if(!t){document.getElementById('rTitle').style.borderColor='#E24B4A';return;}
